@@ -1,8 +1,9 @@
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { View, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet, Alert, Platform } from "react-native";
 import { TextInput, Button, Text, useTheme } from "react-native-paper";
 import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function AddEventScreen() {
@@ -31,10 +32,22 @@ export default function AddEventScreen() {
     }
   };
 
+  const onAndroidDateChange = (event: any, selectedDate?: Date) => {
+    setShowDatePicker(false);
+    if (selectedDate) setDate(selectedDate);
+  };
+
   // 📌 Saat seçme işlemi
   const onConfirmTime = (params: { hours: number; minutes: number }) => {
     setShowTimePicker(false);
     setTime({ hours: params.hours, minutes: params.minutes });
+  };
+
+  const onAndroidTimeChange = (event: any, selectedTime?: Date) => {
+    setShowTimePicker(false);
+    if (selectedTime) {
+      setTime({ hours: selectedTime.getHours(), minutes: selectedTime.getMinutes() });
+    }
   };
 
   // 📌 Event ekleme fonksiyonu (Backend'e gönderme)
@@ -90,33 +103,39 @@ export default function AddEventScreen() {
         <Button mode="contained" onPress={() => setShowDatePicker(true)}>
           {date ? date.toISOString().split("T")[0] : "Tarih Seç"}
         </Button>
-        <DatePickerModal
-          locale="tr"
-          mode="single"
-          visible={showDatePicker}
-          onDismiss={() => setShowDatePicker(false)}
-          date={date}
-          onConfirm={onConfirmDate}
-        />
+
+        {showDatePicker &&
+          (Platform.OS === "web" ? (
+            <DatePickerModal
+              locale="tr"
+              mode="single"
+              visible={showDatePicker}
+              onDismiss={() => setShowDatePicker(false)}
+              date={date}
+              onConfirm={onConfirmDate}
+            />
+          ) : (
+            <DateTimePicker value={date || new Date()} mode="date" display="default" onChange={onAndroidDateChange} />
+          ))}
 
         {/* Saat Seçici */}
         <Text style={styles.label}>Saat Seç:</Text>
         <Button mode="contained" onPress={() => setShowTimePicker(true)}>
           {time ? `${time.hours}:${time.minutes}` : "Saat Seç"}
         </Button>
-        <div style={styles.modalFix}>
 
-        
-        <TimePickerModal
-          visible={showTimePicker}
-          onDismiss={() => setShowTimePicker(false)}
-          onConfirm={onConfirmTime}
-          hours={time?.hours || 12}
-          minutes={time?.minutes || 0}
-        />
-</div>
-
-
+        {showTimePicker &&
+          (Platform.OS === "web" ? (
+            <TimePickerModal
+              visible={showTimePicker}
+              onDismiss={() => setShowTimePicker(false)}
+              onConfirm={onConfirmTime}
+              hours={time?.hours || 12}
+              minutes={time?.minutes || 0}
+            />
+          ) : (
+            <DateTimePicker value={new Date()} mode="time" display="default" is24Hour={true} onChange={onAndroidTimeChange} />
+          ))}
 
         {/* Etkinliği Ekle Butonu */}
         <Button mode="contained" onPress={handleAddEvent} style={styles.submitButton}>
@@ -129,21 +148,7 @@ export default function AddEventScreen() {
 
 // Stil Dosyaları
 
-
 const styles = StyleSheet.create({
-  modalFix: {
-    alignSelf: "center",
-    width: "90%", // Web için daha geniş alan
-    maxWidth: 400,
-    backgroundColor: "white", // Mobil için arka plan rengi
-    borderRadius: 10,
-    padding: 10,
-    elevation: 5, // Android için gölge
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-  },
   container: {
     flex: 1,
     padding: 20,
@@ -160,6 +165,5 @@ const styles = StyleSheet.create({
   submitButton: {
     marginTop: 20,
   },
-
 });
 
