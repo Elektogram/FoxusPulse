@@ -1,7 +1,6 @@
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
-
-#Frontend //////////////
+# //////////////
 
 # dependencies
 node_modules/
@@ -38,28 +37,27 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+# Backend //////////////
 
-#Backend //////////////
+# Django (zbackend klasörü için güncellendi)
+zbackend/*.pyc
+zbackend/*.pyo
+zbackend/__pycache__/
+zbackend/*.sqlite3
+zbackend/db.sqlite3
+zbackend/media/
+zbackend/staticfiles/
+zbackend/env/
+zbackend/venv/
+zbackend/*.log
 
-# Django
-*.pyc
-*.pyo
-__pycache__/
-*.sqlite3
-db.sqlite3
-media/
-staticfiles/
-env/
-venv/
-*.log
-
-# Django migrations
-*/migrations/*
-!*/migrations/__init__.py
+# Django migrations (zbackend için özel olarak düzenlendi)
+zbackend/migrations/
+!zbackend/migrations/__init__.py
 
 # Django environment files
-.env
-.env.*
+zbackend/.env
+zbackend/.env.*
 
 # PyCharm
 .idea/
