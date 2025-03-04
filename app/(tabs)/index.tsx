@@ -12,22 +12,22 @@ export default function CalendarScreen() {
 
   // 🛠 API'den verileri çekme fonksiyonu
   const fetchEvents = async () => {
-    try {
-      const response = await fetch('http://127.0.0.1:8000/api/events/'); // Backend API URL
-      const data = await response.json();
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/events/'); // Backend API URL
+        const data = await response.json();
 
-      let newEvents: any = {};
-      data.forEach((event: any) => {
-        if (!newEvents[event.date]) {
-          newEvents[event.date] = [];
-        }
-        newEvents[event.date].push({ id: event.id, title: event.title, time: event.time });
-      });
+        let newEvents: any = {};
+        data.forEach((event: any) => {
+          if (!newEvents[event.date]) {
+            newEvents[event.date] = [];
+          }
+          newEvents[event.date].push({ id: event.id, title: event.title, time: event.time });
+        });
 
-      setEvents(newEvents); // Gelen veriyi state'e kaydet
-    } catch (error) {
-      console.error('API Error:', error);
-    }
+        setEvents(newEvents); // Gelen veriyi state'e kaydet
+      } catch (error) {
+        console.error('API Error:', error);
+      }
   };
 
   // 🔄 Bileşen yüklendiğinde etkinlikleri çek

@@ -19,9 +19,6 @@ export default function App() {
     <PaperProvider>
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor="#1976D2" />
-        <Appbar.Header>
-          <Appbar.Content title="Ekran Süresi" />
-        </Appbar.Header>
         <ScrollView>
           <Surface style={styles.surface}>
             <View style={styles.totalTimeContainer}>

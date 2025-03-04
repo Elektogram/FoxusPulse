@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@+dvcwj^wvij-192=0w3d)^=4z2-zm5^irm!&xb_avgv(0agoo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -54,7 +54,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# React Native'in erişimine izin ver
+
+CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "DELETE"]
+
+CORS_ALLOW_HEADERS = ["*"]
+
 CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'foxuspulse.urls'

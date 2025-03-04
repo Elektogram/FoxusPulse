@@ -1,5 +1,8 @@
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
+
+#Frontend //////////////
+
 # dependencies
 node_modules/
 
@@ -34,3 +37,40 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+
+#Backend //////////////
+
+# Django
+*.pyc
+*.pyo
+__pycache__/
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+env/
+venv/
+*.log
+
+# Django migrations
+*/migrations/*
+!*/migrations/__init__.py
+
+# Django environment files
+.env
+.env.*
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Pipenv
+Pipfile
+Pipfile.lock
+
+# MySQL/PostgreSQL
+*.pid
+*.dump

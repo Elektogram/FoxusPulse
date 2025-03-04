@@ -26,6 +26,9 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
   });
+  useEffect(() => {
+    document.title = "FoxusPulse";
+  }, []);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -44,6 +47,8 @@ export default function RootLayout() {
 
   return <RootLayoutNav />;
 }
+
+
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();

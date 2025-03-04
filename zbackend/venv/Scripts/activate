@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="D:\burakfkoc\yazılım\projeler\FoxusPulse-Demo-master\zbackend\venv"
+VIRTUAL_ENV="D:\Yazilim\Mobile\FoxusPulse-Demo-master\zbackend\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

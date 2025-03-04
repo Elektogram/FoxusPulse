@@ -1,6 +1,4 @@
-// Move AI chat screen content here
-import type React from "react"
-import { useState } from "react"
+import React, { useState } from "react"
 import {
   View,
   StyleSheet,
@@ -15,9 +13,9 @@ import {
   Surface,
   Appbar,
   useTheme,
-  MD3Colors,
+  ActivityIndicator,
 } from "react-native-paper"
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import FontAwesome from "@expo/vector-icons/FontAwesome"
 
 interface Message {
   id: string
@@ -28,9 +26,10 @@ interface Message {
 export default function AIScreen() {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputText, setInputText] = useState("")
+  const [loading, setLoading] = useState(false)
   const theme = useTheme()
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (inputText.trim() === "") return
 
     const newUserMessage: Message = {
@@ -41,16 +40,36 @@ export default function AIScreen() {
 
     setMessages((prevMessages) => [...prevMessages, newUserMessage])
     setInputText("")
+    setLoading(true)
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      
+      const response = await fetch("http://127.0.0.1:8000/api/chat/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: newUserMessage.text }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json(); // Hata mesajını al
+        console.error("API Hatası:", errorData);
+        return;
+      }
+
+      const data = await response.json()
+
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: `AI response to: "${inputText}"`,
+        text: data.chat_response,
         isUser: false,
       }
+
       setMessages((prevMessages) => [...prevMessages, aiResponse])
-    }, 1000)
+    } catch (error) {
+    console.error("Network veya JSON Hatası:", error);
+      } finally {
+      setLoading(false)
+    }
   }
 
   const renderMessage = ({ item }: { item: Message }) => (
@@ -58,16 +77,9 @@ export default function AIScreen() {
       style={[
         styles.messageBubble,
         item.isUser ? styles.userBubble : styles.aiBubble,
-        { elevation: 1 }
       ]}
     >
-      <Text
-        variant="bodyLarge"
-        style={[
-          styles.messageText,
-          item.isUser ? styles.userMessageText : styles.aiMessageText
-        ]}
-      >
+      <Text style={item.isUser ? styles.userMessageText : styles.aiMessageText}>
         {item.text}
       </Text>
     </Surface>
@@ -79,9 +91,6 @@ export default function AIScreen() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
     >
-      <Appbar.Header>
-        <Appbar.Content title="AI Chat" />
-      </Appbar.Header>
 
       <FlatList
         data={messages}
@@ -90,21 +99,33 @@ export default function AIScreen() {
         contentContainerStyle={styles.messageList}
         inverted
       />
+
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           value={inputText}
           onChangeText={setInputText}
-          placeholder="Type a message..."
+          placeholder="Mesajınızı yazın..."
           placeholderTextColor="#999"
         />
-        <TouchableOpacity 
-          style={[styles.sendButton, !inputText.trim() && styles.sendButtonDisabled]} 
-          onPress={sendMessage}
-          disabled={!inputText.trim()}
-        >
-          <FontAwesome name="send" size={20} color={!inputText.trim() ? "#999" : "#fff"} />
-        </TouchableOpacity>
+        {loading ? (
+          <ActivityIndicator animating={true} size="small" color="#6200ea" />
+        ) : (
+          <TouchableOpacity
+            style={[
+              styles.sendButton,
+              !inputText.trim() && styles.sendButtonDisabled,
+            ]}
+            onPress={sendMessage}
+            disabled={!inputText.trim()}
+          >
+            <FontAwesome
+              name="send"
+              size={20}
+              color={!inputText.trim() ? "#999" : "#fff"}
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </KeyboardAvoidingView>
   )
@@ -127,14 +148,13 @@ const styles = StyleSheet.create({
   },
   userBubble: {
     alignSelf: "flex-end",
-    backgroundColor: MD3Colors.primary50,
+    backgroundColor: "#6200ea",
   },
   aiBubble: {
     alignSelf: "flex-start",
     backgroundColor: "#fff",
-  },
-  messageText: {
-    fontSize: 16,
+    borderWidth: 1,
+    borderColor: "#ddd",
   },
   userMessageText: {
     color: "#fff",
@@ -161,7 +181,7 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   sendButton: {
-    backgroundColor: MD3Colors.primary50,
+    backgroundColor: "#6200ea",
     borderRadius: 20,
     width: 40,
     height: 40,
