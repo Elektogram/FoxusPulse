@@ -51,17 +51,18 @@ npx expo start --ios
 
 ### 🔥 **2️⃣ Django Backend Kurulumu**
 
-Django ve Django REST Framework (DRF) kurun:
+venv ve paketlerin yüklenmesi
 ```sh
-pip install django djangorestframework
+  cd zbackend
+  python -m venv env
+  env\Scripts\activate
+  pip install -r requirements.txt
 ```
 
 Django projesi başlatın:
 ```sh
-django-admin startproject backend
-cd backend
-python manage.py migrate
-python manage.py runserver
+  python manage.py makemigrations
+  python manage.py runserver
 ```
 
 ---
@@ -70,25 +71,19 @@ python manage.py runserver
 
 Firebase SDK yükleyin:
 ```sh
-npm install firebase
+  npm install -g firebase-tools
+  firebase login
+  firebase init
 ```
 
-Firebase bağlantısını ayarlayın (`firebaseConfig.js`):
-```js
-import { initializeApp } from "firebase/app";
+### 🔥 ** Geliştirici Ekip**
 
-const firebaseConfig = {
-  apiKey: "API_KEY",
-  authDomain: "your-app.firebaseapp.com",
-  projectId: "your-app",
-  storageBucket: "your-app.appspot.com",
-  messagingSenderId: "SENDER_ID",
-  appId: "APP_ID"
-};
+Esma / Takım Lideri
 
-const app = initializeApp(firebaseConfig);
-export default app;
-```
+Burak
 
----
+Mehmet
 
+İnan
+
+Beyza / Mentör:
